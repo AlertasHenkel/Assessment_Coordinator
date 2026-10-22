@@ -1,0 +1,426 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Assessment Coordinador Regional</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: barra de control fija (cronómetro + secciones) sobre una columna de trabajo; tablas de datos con scroll propio */
+:root{
+  --bg:#f6f4f3; --surface:#ffffff; --ink:#1d1a1a; --muted:#6b6362; --line:#e2dcda;
+  --accent:#c8102e; --accent-soft:#fbe9ec; --ok:#1f7a4d; --ok-soft:#e5f4ec; --warn:#a15c00; --warn-soft:#fdf1df; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --r1:#2f6db5; --r2:#b8730a; --r3:#13897a;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151213; --surface:#1f1b1c; --ink:#f1ecea; --muted:#a69d9b; --line:#3a3334;
+  --accent:#ff4d5e; --accent-soft:#3a1d21; --ok:#5fcf93; --ok-soft:#173326; --warn:#f0b357; --warn-soft:#3a2b14; --bad:#ff7a70; --bad-soft:#3d1c1a; --r1:#5b9be6; --r2:#e09a32; --r3:#3cb8a6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151213; --surface:#1f1b1c; --ink:#f1ecea; --muted:#a69d9b; --line:#3a3334;
+  --accent:#ff4d5e; --accent-soft:#3a1d21; --ok:#5fcf93; --ok-soft:#173326; --warn:#f0b357; --warn-soft:#3a2b14; --bad:#ff7a70; --bad-soft:#3d1c1a; --r1:#5b9be6; --r2:#e09a32; --r3:#3cb8a6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-in,.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar-in{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding-block:10px}
+.brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+.brand b{color:var(--accent)}
+.clock{margin-left:auto;font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;padding:2px 12px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.clock.low{color:var(--bad);border-color:var(--bad)}
+nav{display:flex;gap:6px;overflow-x:auto;width:100%;padding-bottom:2px}
+nav button{flex:none;font:600 14px var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+nav button[aria-current="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+nav button.locked{opacity:.45}
+.wrap{padding-block:28px 64px;display:grid;gap:24px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.1;margin:0}
+h1{font-size:40px;font-weight:700;text-transform:uppercase}
+h2{font-size:30px;font-weight:700;text-transform:uppercase}
+h2 small{display:block;font:600 13px var(--body);letter-spacing:.08em;color:var(--accent);margin-bottom:4px}
+h3{font-size:21px;font-weight:600}
+p{margin:0;max-width:72ch}
+.muted{color:var(--muted)}
+section.sec{display:grid;gap:18px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px;min-width:0}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 8px 8px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+label{font-weight:600;font-size:15px;display:block;margin-bottom:6px}
+.hint{font-weight:400;color:var(--muted);font-size:14px}
+input[type=text],input[type=number],textarea,select{width:100%;font:16px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px}
+textarea{min-height:120px;resize:vertical}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font:600 12px var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--bg);position:sticky;top:0}
+td:first-child,th:first-child,td.l,th.l{text-align:left}
+td select{width:auto;padding:4px 6px;font-size:14px}
+.num{font-family:var(--mono)}
+.chip{display:inline-block;font:600 12px var(--body);padding:2px 8px;border-radius:999px}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.bad{background:var(--bad-soft);color:var(--bad)}
+.routes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.route{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:4px;background:var(--bg)}
+.route .big{font-family:var(--mono);font-size:24px}
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--ok)}
+.meter i.over{background:var(--bad)}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-weight:400}
+.opt input{margin-top:4px}
+.opts{display:grid;gap:8px}
+.chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
+.chk label{font-weight:400;display:flex;gap:6px;align-items:center;margin:0;padding:6px 8px;border:1px solid var(--line);border-radius:6px}
+.btn{font:700 15px var(--body);padding:11px 18px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.banner{padding:12px 16px;border-radius:8px;font-weight:600}
+.banner.warn{background:var(--warn-soft);color:var(--warn)}
+.banner.bad{background:var(--bad-soft);color:var(--bad)}
+.banner.ok{background:var(--ok-soft);color:var(--ok)}
+.timebox{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+pre.out{white-space:pre-wrap;font:13px/1.5 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px;max-height:380px;overflow:auto}
+.kpi-ref td:first-child{font-weight:600}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+fieldset:disabled{opacity:.75}
+.clay{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}
+.cside{position:sticky;top:calc(var(--barh,110px) + env(safe-area-inset-top,0px) + 12px);display:grid;gap:10px}
+.cside .route{background:var(--surface);padding:10px 12px}
+.cside .route .big{font-size:20px}
+.cside .route .muted{font-size:13px!important}
+.tools{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.tool{border:1px dashed var(--line);border-radius:8px;padding:12px;display:grid;gap:8px}
+.tool .row input,.tool .row select{width:auto;max-width:90px;padding:6px 8px}
+.tool .lbl{font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pdvs{display:grid;gap:8px}
+.pdv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:8px;padding:10px 12px}
+.pdv[data-r="R1"]{border-left-color:var(--r1)} .pdv[data-r="R2"]{border-left-color:var(--r2)} .pdv[data-r="R3"]{border-left-color:var(--r3)}
+.pdv .nm{font-weight:700;font-size:16px}
+.pdv .nm span{font:500 13px var(--mono);color:var(--muted);margin-right:6px}
+.pdv .meta{display:flex;flex-wrap:wrap;gap:2px 12px;line-height:1.4;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pdv .meta b{color:var(--ink);font-weight:600}
+.ctrls{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:flex-end}
+.ctrl{display:grid;gap:2px}
+.ctrl small{font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg)}
+.seg button{min-width:32px;padding:6px 8px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--ink);font:600 14px var(--mono);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.seg.rt button[data-v="R1"][aria-pressed="true"]{background:var(--r1);color:#fff}
+.seg.rt button[data-v="R2"][aria-pressed="true"]{background:var(--r2);color:#fff}
+.seg.rt button[data-v="R3"][aria-pressed="true"]{background:var(--r3);color:#fff}
+.rdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.crit{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px 10px;align-items:start}
+.crit .n{font:600 18px var(--mono);color:var(--accent);padding-top:6px}
+.crit textarea{min-height:56px}
+@media (max-width:860px){.clay{grid-template-columns:1fr}.cside{position:static}.pdv{grid-template-columns:1fr}.ctrls{justify-content:flex-start}}
+@media (max-width:560px){h1{font-size:32px}h2{font-size:26px}.clock{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand"><b>Eficacia</b> · Henkel Colombiana</div>
+    <div class="clock" id="clock" aria-live="off">40:00</div>
+    <nav id="nav" aria-label="Secciones"></nav>
+  </div>
+</div>
+
+<main class="wrap">
+<fieldset id="fs">
+
+<!-- 0. INICIO -->
+<section class="sec" data-sec="inicio" data-label="Inicio">
+  <div style="display:grid;gap:10px">
+    <h1>Assessment Coordinador Regional</h1>
+    <p class="muted">Canal Droguerías y Canal Moderno · Cliente Henkel Colombiana · Datos ficticios elaborados para esta prueba.</p>
+  </div>
+  <div class="panel">
+    <h3>Cómo funciona</h3>
+    <p>Usted fue contratado por Eficacia como Coordinador Regional. Reporta al KAM, se apoya en el Analista de Información y lidera transferencistas, mercaderistas y tropas de mercaimpulso. Resuelva las cinco partes en esta misma página. Tiene <b>40 minutos</b>; al terminar presenta y sustenta sus resultados por Teams ante el panel.</p>
+    <div class="grid2">
+      <div><span class="timebox">Parte A · 5 min</span><p>Diagnóstico numérico rápido.</p></div>
+      <div><span class="timebox">Parte B · 5 min</span><p>Caso 1: a quién intervenir y en qué orden.</p></div>
+      <div><span class="timebox">Parte C · 15 min</span><p>Caso 2: rediseño de rutas del Canal Moderno.</p></div>
+      <div><span class="timebox">Parte D · 5 min</span><p>Imprevisto. Se habilita en el minuto 25.</p></div>
+      <div><span class="timebox">Parte E · 5 min</span><p>Juicio situacional en gestión de personas.</p></div>
+    </div>
+    <div class="callout"><p>Puede usar calculadora y Excel. Sus respuestas se guardan en este navegador mientras trabaja. Al terminar, use <b>Copiar respuestas</b> en la sección Entrega y péguelas completas en el chat de Teams de la sesión, sin modificarlas. La página registra cuántas veces sale de esta pestaña y cuántas veces pega texto.</p></div>
+    <div class="grid2">
+      <div><label for="cand">Nombre completo</label><input id="cand" type="text" autocomplete="name" placeholder="Nombre y apellido"></div>
+      <div><label for="ced">Documento o correo</label><input id="ced" type="text" placeholder="Para identificar su entrega"></div>
+    </div>
+    <div class="row"><button class="btn" id="startBtn" type="button">Iniciar prueba (40:00)</button><span class="muted" id="startMsg"></span></div>
+  </div>
+</section>
+
+<!-- A -->
+<section class="sec" data-sec="a" data-label="A · Diagnóstico" hidden>
+  <h2><small>Parte A · 5 minutos</small>Diagnóstico numérico</h2>
+  <div class="panel">
+    <p>Canal Droguerías, 20 transferencistas a nivel nacional. Hoy es el <b>día hábil 20 de 25</b> del mes. El presupuesto mensual de venta del canal es de <b>$2.000 millones</b> (100%).</p>
+    <p><b>Volumen, Cobertura y Frecuencia</b> son acumulados contra la meta mensual. <b>Efectividad</b> (pedidos / visitas) y <b>Ejecución Perfecta</b> (PDV auditados que cumplen / PDV auditados) son ratios del mes a la fecha.</p>
+    <div class="tablebox"><table class="kpi-ref">
+      <thead><tr><th>Indicador</th><th>Tipo</th><th>Peso</th><th>Meta mínima</th><th>Real día 20</th></tr></thead>
+      <tbody>
+        <tr><td>Volumen</td><td class="l">Acumulado</td><td>35%</td><td>90%</td><td>70%</td></tr>
+        <tr><td>Efectividad</td><td class="l">Ratio</td><td>20%</td><td>70%</td><td>40%</td></tr>
+        <tr><td>Ejecución Perfecta</td><td class="l">Ratio</td><td>15%</td><td>100%</td><td>80%</td></tr>
+        <tr><td>Cobertura</td><td class="l">Acumulado</td><td>15%</td><td>95%</td><td>75%</td></tr>
+        <tr><td>Frecuencia de visitas</td><td class="l">Acumulado</td><td>15%</td><td>95%</td><td>75%</td></tr>
+      </tbody></table></div>
+  </div>
+  <div class="panel grid2">
+    <div><label for="a1">A1. ¿En qué porcentaje de Volumen deberíamos ir hoy para estar en línea con la meta de 90%? <span class="hint">(%)</span></label><input id="a1" type="number" step="0.1"></div>
+    <div><label for="a2">A2. Si continuamos al ritmo actual, ¿cuál es la proyección de cierre en Volumen? <span class="hint">(%)</span></label><input id="a2" type="number" step="0.1"></div>
+    <div><label for="a3">A3. ¿Cuánta venta diaria adicional al ritmo actual se requiere para llegar al 90%? <span class="hint">(millones de pesos por día)</span></label><input id="a3" type="number" step="0.1"></div>
+    <div><label for="a4">A4. ¿En qué indicador debemos enfocar el esfuerzo los días que quedan?</label><select id="a4"><option value="">–</option><option>Volumen</option><option>Efectividad</option><option>Ejecución Perfecta</option><option>Cobertura</option><option>Frecuencia</option></select></div>
+  </div>
+  <div class="panel"><label for="a5">A5. Si la Efectividad de los días restantes fuera 100%, ¿con qué Efectividad cerraría el mes? ¿Qué concluye sobre las metas que todavía se pueden cumplir?</label><textarea id="a5"></textarea></div>
+</section>
+
+<!-- B -->
+<section class="sec" data-sec="b" data-label="B · Caso 1" hidden>
+  <h2><small>Parte B · 5 minutos</small>Caso 1 · Droguerías</h2>
+  <div class="panel">
+    <p>El promedio esconde la dispersión. Este es el detalle por transferencista al día hábil 20. La columna Ausencia indica días no laborados en el mes (incapacidad, vacante o permiso).</p>
+    <div class="tablebox"><table id="t1"></table></div>
+  </div>
+  <div class="panel">
+    <label>B1. ¿A qué transferencistas interviene primero? <span class="hint">Marque los que entrarían en plan de choque esta semana.</span></label>
+    <div class="chk" id="b1"></div>
+  </div>
+  <div class="panel">
+    <label>B2. Orden de prioridad de los indicadores para los 5 días que quedan <span class="hint">(1 = primero; no repita números)</span></label>
+    <div class="grid2" id="b3"></div>
+    <p class="muted">La justificación y el plan de acción los sustenta verbalmente en la presentación.</p>
+  </div>
+</section>
+
+<!-- C -->
+<section class="sec" data-sec="c" data-label="C · Caso 2" hidden>
+  <h2><small>Parte C · 15 minutos</small>Caso 2 · Rutas del Canal Moderno</h2>
+  <div class="panel">
+    <p>Durante el último bimestre los indicadores de la regional Bogotá cayeron. El análisis concluye que las rutas y frecuencias no son las óptimas. Rediseñe el rutero de 15 PDV con <b>3 mercaderistas de rol mixto</b>.</p>
+    <div class="callout"><p><b>Rol mixto:</b> de lunes a viernes el mercaderista hace rutero (surtido, exhibición, agotados, precios); el sábado hace 6 horas de impulso en un PDV A. Considere la normativa laboral vigente en Colombia (jornada, recargos dominicales y nocturnos).</p></div>
+    <div style="max-width:420px"><label for="c0">C0. ¿Cuál es la jornada máxima legal semanal vigente hoy en Colombia? <span class="hint">(horas)</span></label><input id="c0" type="number" step="1"></div>
+    <p class="muted">Las horas disponibles para rutero se calculan con su respuesta a C0 menos las 6 horas del sábado. Desplazamiento estimado por visita: 20 min si la ruta está en una sola zona, 30 min si cubre dos zonas y 40 min si cubre tres o más.</p>
+  </div>
+  <div class="panel">
+    <h3>Asigne clase, visitas por semana y ruta a cada PDV</h3>
+    <p class="muted">Toque una opción para elegirla y tóquela de nuevo para quitarla. Las herramientas rápidas llenan varios PDV a la vez; luego puede ajustar cada uno.</p>
+    <div class="tools">
+      <div class="tool"><span class="lbl">Visitas por clase</span>
+        <div class="row"><label for="qa" style="margin:0">A</label><input id="qa" type="number" min="0" max="5"><label for="qb" style="margin:0">B</label><input id="qb" type="number" min="0" max="5"><label for="qc" style="margin:0">C</label><input id="qc" type="number" min="0" max="5"><button class="btn ghost" type="button" id="qApply">Aplicar</button></div>
+        <span class="muted" style="font-size:13px">Asigna las visitas a los PDV que ya tienen clase.</span></div>
+      <div class="tool"><span class="lbl">Zona a ruta</span>
+        <div class="row"><select id="qz" aria-label="Zona"><option>Norte</option><option>Occidente</option><option>Sur</option><option>Centro</option></select><span>→</span><select id="qr" aria-label="Ruta"><option>R1</option><option>R2</option><option>R3</option></select><button class="btn ghost" type="button" id="qzApply">Aplicar</button></div>
+        <span class="muted" style="font-size:13px" id="qmsg">Asigna la ruta a todos los PDV de la zona.</span></div>
+    </div>
+    <div class="row"><span class="lbl muted" style="font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase">Ordenar</span><div class="seg" id="sortSeg"><button type="button" data-v="cod" aria-pressed="true">Código</button><button type="button" data-v="venta" aria-pressed="false">Venta</button><button type="button" data-v="zona" aria-pressed="false">Zona</button></div><span class="muted" id="cprog"></span></div>
+  </div>
+  <div class="clay">
+    <div class="pdvs" id="pdvs"></div>
+    <aside class="cside" aria-label="Carga por ruta">
+      <h3>Carga por ruta</h3>
+      <div class="routes" id="routes" style="grid-template-columns:1fr"></div>
+      <p class="muted" id="routeTotal" style="font-size:14px"></p>
+    </aside>
+  </div>
+  <div class="panel">
+    <label>C1. Sus 5 criterios para construir las nuevas rutas <span class="hint">Escriba cada criterio y por qué lo usa, en frases completas.</span></label>
+    <div style="display:grid;gap:12px" id="critBox"></div>
+    <p class="muted">El orden de visita y el seguimiento de las rutas los sustenta verbalmente en la presentación.</p>
+  </div>
+</section>
+
+<!-- D -->
+<section class="sec" data-sec="d" data-label="D · Imprevisto" hidden>
+  <h2><small>Parte D · 5 minutos</small>Imprevisto</h2>
+  <div id="dLocked" class="banner warn">Esta parte se habilita en el minuto 25 de la prueba. Siga trabajando en las demás.</div>
+  <div id="dBody" hidden>
+    <div class="panel">
+      <div class="callout"><p><b>Mensaje del KAM, día hábil 21, 10:40 a.m.</b><br>Henkel confirmó para mañana sábado una exhibición adicional de cuidado capilar en Éxito Calle 80 y Jumbo Hayuelos, con foto de ejecución antes de las 12:00 m. Al mismo tiempo, la mercaderista de la ruta que cubre Occidente reporta incapacidad por 3 días y T03 (Bogotá Occidente, Droguerías) presentó renuncia hoy.</p></div>
+      <label for="d1">D1. ¿Qué hace en las próximas 2 horas? ¿A quién reasigna, qué deja de hacer y qué le responde al KAM?</label>
+      <textarea id="d1" style="min-height:170px"></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- E -->
+<section class="sec" data-sec="e" data-label="E · Personas" hidden>
+  <h2><small>Parte E · 5 minutos</small>Juicio situacional</h2>
+  <p class="muted">Elija la mejor respuesta. Todas las opciones son acciones que un coordinador podría tomar.</p>
+  <div id="sjt" style="display:grid;gap:18px"></div>
+</section>
+
+</fieldset>
+<!-- Entrega -->
+<section class="sec" data-sec="fin" data-label="Entrega" hidden>
+  <h2><small>Cierre</small>Entrega</h2>
+  <div class="panel">
+    <div id="finBanner" class="banner ok" hidden></div>
+    <p>Revise el resumen. Copie todo, sin modificarlo, y péguelo en el chat de Teams de la sesión. El código final permite calificar su prueba.</p>
+    <div class="row"><button class="btn" id="copyBtn" type="button">Copiar respuestas</button><span id="copyMsg" class="muted"></span></div>
+    <pre class="out" id="out"></pre>
+  </div>
+  <div class="panel">
+    <h3>Reiniciar prueba</h3>
+    <p class="muted">Uso exclusivo del evaluador. Borra todas las respuestas guardadas en este navegador y reinicia el cronómetro. Copie las respuestas antes de reiniciar.</p>
+    <div class="row"><input id="rcode" type="text" placeholder="Código del evaluador" style="max-width:220px" autocomplete="off"><button class="btn ghost" id="resetBtn" type="button">Reiniciar</button><span id="resetMsg" class="muted"></span></div>
+  </div>
+</section>
+</main>
+
+<script>
+(()=>{
+const DUR=40*60*1000, D_UNLOCK=25*60*1000, KEY="assess-coord-v2";
+const T=[["T01","Bogotá Norte",82,52,90,86,88,0],["T02","Bogotá Sur",78,47,85,82,84,0],["T03","Bogotá Occidente",48,24,70,52,50,4],["T04","Medellín",80,50,90,85,86,0],["T05","Medellín",76,45,85,80,82,0],["T06","Cali",44,22,65,50,48,5],["T07","Cali",74,43,85,80,80,0],["T08","Barranquilla",79,48,90,84,85,0],["T09","Barranquilla",72,40,75,78,76,1],["T10","Bucaramanga",81,51,90,86,86,0],["T11","Pereira",77,46,85,82,82,0],["T12","Ibagué",50,25,70,55,52,3],["T13","Cartagena",75,44,75,80,80,0],["T14","Villavicencio",73,41,80,78,78,0],["T15","Pasto",46,23,60,50,50,6],["T16","Neiva",78,46,85,82,82,0],["T17","Cúcuta",74,40,70,79,80,0],["T18","Santa Marta",80,49,85,80,86,0],["T19","Montería",62,32,75,72,70,2],["T20","Tunja",71,32,80,79,75,0]];
+const P=[["P01","Éxito Calle 80","Hiper","Occidente",182,-6,9,150,"6:00–10:00"],["P02","Éxito Unicentro","Hiper","Norte",160,-4,7,150,"6:00–9:00"],["P03","Jumbo Hayuelos","Hiper","Occidente",148,-9,12,150,"5:30–9:30"],["P04","Alkosto Av. 68","Hiper","Occidente",135,2,6,120,"7:00–11:00"],["P05","Makro Calle 30","Mayorista","Centro",120,-2,5,90,"6:00–12:00"],["P06","Olímpica Suba","Super","Norte",64,-11,14,90,"7:00–10:00"],["P07","Jumbo Santa Ana","Hiper","Norte",92,1,6,120,"6:00–9:00"],["P08","Éxito Las Américas","Hiper","Sur",88,-7,10,120,"6:00–10:00"],["P09","Alkosto Venecia","Hiper","Sur",98,3,5,120,"7:00–11:00"],["P10","Carulla Calle 140","Super","Norte",38,4,4,60,"7:00–10:00"],["P11","Olímpica Kennedy","Super","Sur",46,-8,13,75,"7:00–10:00"],["P12","PriceSmart Usaquén","Mayorista","Norte",55,0,3,60,"6:00–10:00"],["P13","Éxito Bosa","Super","Sur",42,-5,11,75,"6:00–10:00"],["P14","Makro Autopista Sur","Mayorista","Sur",72,-1,4,90,"6:00–12:00"],["P15","Jumbo Calle 80","Hiper","Occidente",104,-5,8,120,"5:30–9:30"]];
+const RUTAS=["R1","R2","R3"];
+const KPIS=["Volumen","Efectividad","Ejecución Perfecta","Cobertura","Frecuencia"];
+const SJT=[
+ {q:"E1. El reporte GPS muestra que un mercaderista marcó visita en Olímpica Suba, pero la geolocalización lo ubica a 4 km del PDV. Es la segunda vez en el mes.",o:[
+  "Aplicar el descuento de la visita y el llamado de atención escrito, porque es la segunda vez en el mes y el registro del sistema es la evidencia oficial.",
+  "Darle una advertencia verbal en privado y acompañarlo en ruta la próxima semana, para corregir la conducta sin afectar el clima del equipo.",
+  "Cruzar el GPS con fotos, registro de ingreso y ruta, escuchar su versión y, si se confirma, escalar a Gestión Humana con el soporte documentado.",
+  "Pedir al área de tecnología que revise la precisión del GPS en esa zona antes de actuar, porque las fallas del equipo son una causa frecuente."]},
+ {q:"E2. El jefe de piso de Jumbo Hayuelos le pide a una impulsadora de la tropa que descargue mercancía de otras categorías y organice la bodega del almacén. Ella lo hace para no tener problemas.",o:[
+  "Hablar con el jefe de piso para aclarar el alcance del rol, dejar registro del caso y escalarlo al KAM para que se acuerde formalmente con el cliente.",
+  "Permitir el apoyo ocasional mientras no afecte la exhibición de Henkel, porque esa relación define el espacio y la visibilidad de la marca.",
+  "Instruir a la impulsadora para que no haga esas tareas y reporte cada solicitud, para tener evidencia suficiente antes de hablar con el almacén.",
+  "Reportar el caso directamente a Henkel para que su equipo comercial lo resuelva con la cadena y Eficacia no asuma el conflicto con el cliente."]},
+ {q:"E3. El transferencista con mejor Volumen de la regional tiene tres quejas de droguerías por pedidos no autorizados y presión en la venta. Las devoluciones de su zona subieron.",o:[
+  "Reconocer su resultado ante el equipo y pedirle en privado que cuide la relación con los clientes, porque su volumen sostiene el cumplimiento del mes.",
+  "Reasignar a otro transferencista las droguerías que se quejaron y mantenerle el resto de la zona, para cortar el problema sin perder su aporte.",
+  "Esperar al cierre del mes para no afectar el cumplimiento y luego hacer una evaluación de desempeño completa con Gestión Humana y el KAM.",
+  "Validar quejas, devoluciones y cartera de su zona, darle retroalimentación formal con seguimiento y ajustar el volumen que no sea venta real."]}
+];
+const $=s=>document.querySelector(s);
+let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){S={}}
+S.f=S.f||{}; S.blur=S.blur||0; S.paste=S.paste||0;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* tabla caso 1 */
+const avg=i=>(T.reduce((a,r)=>a+r[i],0)/T.length).toFixed(0);
+const MET=[90,70,100,95,95];
+const cls=(v,k)=>{const x=(k==1||k==2)?v:v/0.8,m=MET[k];return x>=m?"ok":x>=m*0.85?"warn":"bad"};
+let h='<thead><tr><th>Código</th><th class="l">Ciudad</th><th>Vol.</th><th>Efect.</th><th>Ej. Perf.</th><th>Cob.</th><th>Frec.</th><th>Ausencia (días)</th></tr></thead><tbody>';
+T.forEach(r=>{h+=`<tr><td>${r[0]}</td><td class="l">${r[1]}</td>`+[2,3,4,5,6].map((i,k)=>`<td><span class="chip ${cls(r[i],k)}">${r[i]}%</span></td>`).join("")+`<td>${r[7]||"–"}</td></tr>`});
+h+=`<tr><td><b>Promedio</b></td><td></td>${[2,3,4,5,6].map(i=>`<td><b>${avg(i)}%</b></td>`).join("")}<td></td></tr></tbody>`;
+$("#t1").innerHTML=h;
+$("#b1").innerHTML=T.map(r=>`<label><input type="checkbox" id="b1_${r[0]}">${r[0]}</label>`).join("");
+$("#b3").innerHTML=KPIS.map((k,i)=>`<div><label for="b3_${i}">${k}</label><select id="b3_${i}"><option value="">–</option>${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join("")}</select></div>`).join("");
+
+/* caso 2: tarjetas con selectores segmentados */
+const F=k=>(S.f[k]||"");
+const seg=(id,vals,cls="")=>`<div class="seg ${cls}" data-k="${id}">${vals.map(x=>`<button type="button" data-v="${x}" aria-pressed="${F(id)===String(x)}">${x}</button>`).join("")}</div>`;
+let sortBy="cod";
+function drawPdv(){
+  const L=[...P];if(sortBy==="venta")L.sort((a,b)=>b[4]-a[4]);if(sortBy==="zona")L.sort((a,b)=>a[3].localeCompare(b[3])||b[4]-a[4]);
+  $("#pdvs").innerHTML=L.map(r=>`<div class="pdv" data-r="${F("cr_"+r[0])}"><div style="min-width:0"><div class="nm"><span>${r[0]}</span>${r[1]}</div>
+  <div class="meta"><span>${r[3]} · ${r[2]} · Recibo <b>${r[8]}</b></span></div><div class="meta"><span>Venta <b>${r[4]} M</b></span><span>Crec. <b style="color:var(--${r[5]<-5?"bad":r[5]<0?"warn":"ok"})">${r[5]>0?"+":""}${r[5]}%</b></span><span>Agot. <b style="color:var(--${r[6]>=10?"bad":r[6]>=7?"warn":"ok"})">${r[6]}%</b></span><span>Gestión <b>${r[7]} min</b></span></div></div>
+  <div class="ctrls"><div class="ctrl"><small>Clase</small>${seg("cc_"+r[0],["A","B","C"])}</div><div class="ctrl"><small>Visitas/sem</small>${seg("cf_"+r[0],[0,1,2,3,4,5])}</div><div class="ctrl"><small>Ruta</small>${seg("cr_"+r[0],RUTAS,"rt")}</div></div></div>`).join("");
+  const done=P.filter(r=>F("cc_"+r[0])&&F("cf_"+r[0])!==""&&F("cr_"+r[0])).length;
+  $("#cprog").textContent=`${done} de ${P.length} PDV completos`;
+}
+$("#pdvs").addEventListener("click",e=>{const b=e.target.closest(".seg button");if(!b||$("#fs").disabled)return;const k=b.parentElement.dataset.k,v=b.dataset.v;S.f[k]=S.f[k]===v?"":v;save();drawPdv();routes()});
+$("#sortSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;sortBy=b.dataset.v;[...$("#sortSeg").children].forEach(x=>x.setAttribute("aria-pressed",x===b));drawPdv()});
+$("#qApply").addEventListener("click",()=>{const m={A:$("#qa").value,B:$("#qb").value,C:$("#qc").value};let n=0;P.forEach(r=>{const c=F("cc_"+r[0]),q=m[c];if(c&&q!==""&&+q>=0&&+q<=5){S.f["cf_"+r[0]]=String(+q);n++}});save();drawPdv();routes();$("#qmsg").textContent=n?`Visitas aplicadas a ${n} PDV.`:"Primero asigne la clase a los PDV."});
+$("#qzApply").addEventListener("click",()=>{const z=$("#qz").value,rt=$("#qr").value;let n=0;P.forEach(r=>{if(r[3]===z){S.f["cr_"+r[0]]=rt;n++}});save();drawPdv();routes();$("#qmsg").textContent=`${z}: ${n} PDV asignados a ${rt}.`});
+$("#critBox").innerHTML=[1,2,3,4,5].map(i=>`<div class="crit"><div class="n">${i}</div><div style="display:grid;gap:6px"><input id="c1c_${i}" type="text" placeholder="Criterio ${i}" aria-label="Criterio ${i}"><textarea id="c1w_${i}" placeholder="Por qué lo usa y cómo lo aplica" aria-label="Por qué del criterio ${i}"></textarea></div></div>`).join("");
+drawPdv();
+const setBarH=()=>document.documentElement.style.setProperty("--barh",document.querySelector(".bar").offsetHeight+"px");setBarH();addEventListener("resize",setBarH);
+
+/* SJT */
+$("#sjt").innerHTML=SJT.map((s,i)=>`<div class="panel"><p><b>${s.q}</b></p><div class="opts">${s.o.map((o,j)=>`<label class="opt"><input type="radio" name="e${i}" id="e${i}_${j}" value="${"abcd"[j]}"><span><b>${"abcd"[j]})</b> ${o}</span></label>`).join("")}</div></div>`).join("");
+
+/* rutas */
+function routes(){
+  const R={};RUTAS.forEach(k=>R[k]=[]);let un=0,tot=0;
+  P.forEach(r=>{const rt=F("cr_"+r[0]),f=+F("cf_"+r[0])||0;tot+=f;if(rt)R[rt].push([r,f]);else un++});
+  const j=+$("#c0").value||0,cap=j>6?j-6:0;
+  let html="",sum=0;
+  for(const k of RUTAS){const z=new Set(R[k].map(x=>x[0][3])).size;const tr=z<=1?20:z==2?30:40;
+    const hrs=R[k].reduce((a,[r,f])=>a+f*(r[7]+tr),0)/60;sum+=hrs;
+    const v=R[k].reduce((a,[r,f])=>a+f,0),sale=R[k].reduce((a,[r])=>a+r[4],0);
+    const over=cap&&hrs>cap,pct=cap?Math.min(100,hrs/cap*100):0;
+    const chip=!cap?'<span class="chip warn">Responda C0</span>':`<span class="chip ${over?"bad":hrs>cap*0.9?"warn":"ok"}">${over?`Excede ${cap} h`:hrs>cap*0.9?"Al límite":"Dentro de jornada"}</span>`;
+    html+=`<div class="route"><div class="row" style="justify-content:space-between"><b><span class="rdot" style="background:var(--r${k[1]})"></span>${k}</b>${chip}</div><div class="big">${hrs.toFixed(1)} h</div><div class="meter"><i class="${over?"over":""}" style="width:${pct}%"></i></div><div class="muted" style="font-size:14px">${R[k].length} PDV · ${v} visitas/sem · ${z} zona(s) · venta ${sale} M</div></div>`}
+  $("#routes").innerHTML=html;
+  $("#routeTotal").textContent=`Total: ${sum.toFixed(1)} h${cap?` de ${cap*3} h disponibles para rutero`:""} · ${tot} visitas/semana · ${un} PDV sin ruta asignada.`;
+}
+
+/* persistencia */
+document.querySelectorAll("#fs input,#fs textarea,#fs select").forEach(el=>{
+  const k=el.id;if(!k)return;
+  if(el.type==="checkbox")el.checked=!!S.f[k];else if(el.type==="radio")el.checked=S.f[el.name]===el.value;else if(S.f[k]!=null)el.value=S.f[k];
+  el.addEventListener(el.tagName==="SELECT"||el.type==="checkbox"||el.type==="radio"?"change":"input",()=>{
+    if(el.type==="checkbox")S.f[k]=el.checked;else if(el.type==="radio")S.f[el.name]=el.value;else S.f[k]=el.value;
+    save();if(k.startsWith("c"))routes();
+  });
+});
+routes();
+document.addEventListener("paste",()=>{if(S.start&&!S.end){S.paste++;save()}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&S.start&&!S.end){S.blur++;save()}});
+
+/* navegación */
+const secs=[...document.querySelectorAll("section.sec")];
+function show(id){secs.forEach(s=>s.hidden=s.dataset.sec!==id);[...$("#nav").children].forEach(b=>b.setAttribute("aria-current",b.dataset.id===id));S.cur=id;save();if(id==="fin")summary();window.scrollTo({top:0})}
+$("#nav").innerHTML=secs.map(s=>`<button type="button" data-id="${s.dataset.sec}">${s.dataset.label}</button>`).join("");
+$("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(!S.start&&b.dataset.id!=="inicio"){$("#startMsg").textContent="Escriba su nombre e inicie la prueba para ver los casos.";return}show(b.dataset.id)});
+
+/* cronómetro */
+function tick(){
+  if(!S.start){$("#clock").textContent="40:00";return}
+  const el=Date.now()-S.start,left=Math.max(0,DUR-el);
+  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+  $("#clock").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  $("#clock").classList.toggle("low",left<5*60000);
+  const dOpen=el>=D_UNLOCK;$("#dLocked").hidden=dOpen;$("#dBody").hidden=!dOpen;
+  if(left===0&&!S.end){S.end=Date.now();save();$("#fs").disabled=true;show("fin")}
+}
+function begin(){
+  if(!$("#cand").value.trim()){$("#startMsg").textContent="Escriba su nombre para iniciar.";$("#cand").focus();return}
+  if(!S.start){S.start=Date.now();save()}
+  $("#startBtn").disabled=true;$("#startBtn").textContent="Prueba en curso";show("a");
+}
+$("#startBtn").addEventListener("click",begin);
+if(S.start){$("#startBtn").disabled=true;$("#startBtn").textContent="Prueba en curso";if(S.end)$("#fs").disabled=true}
+show(S.start?(S.cur||"a"):"inicio");
+tick();setInterval(tick,1000);
+
+/* resumen + código de calificación */
+const v=id=>{const e=document.getElementById(id);return e?(e.value||"").trim():""};
+const crit=()=>[1,2,3,4,5].map(i=>{const c=v("c1c_"+i),w=v("c1w_"+i);return c||w?`${i}. ${c}${w?" – "+w:""}`:""}).filter(Boolean).join("\n");
+const enc=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+function summary(){
+  routes();
+  const fmt=t=>t||"(sin respuesta)";
+  const data={v:2,cand:v("cand"),ced:v("ced"),start:S.start||0,end:S.end||Date.now(),closed:!!S.end,blur:S.blur,paste:S.paste,
+    a:[v("a1"),v("a2"),v("a3"),v("a4"),v("a5")],b1:T.filter(t=>S.f["b1_"+t[0]]).map(t=>t[0]),b2:KPIS.map((k,i)=>v("b3_"+i)),
+    c0:v("c0"),c:P.map(p=>[p[0],F("cc_"+p[0]),F("cf_"+p[0]),F("cr_"+p[0])]),c1:crit(),d1:v("d1"),e:SJT.map((s,i)=>S.f["e"+i]||"")};
+  let o=`ASSESSMENT COORDINADOR REGIONAL – EFICACIA / HENKEL\nCandidato: ${data.cand} | ${data.ced}\nInicio: ${S.start?new Date(S.start).toLocaleString("es-CO"):"-"} | Fin: ${S.end?new Date(S.end).toLocaleString("es-CO"):new Date().toLocaleString("es-CO")+" (antes del tiempo)"}\nSalidas de pestaña: ${S.blur} | Textos pegados: ${S.paste}\n\n`;
+  o+=`== PARTE A ==\nA1 Volumen en línea: ${fmt(data.a[0])}\nA2 Proyección cierre: ${fmt(data.a[1])}\nA3 Venta diaria adicional (M): ${fmt(data.a[2])}\nA4 Indicador foco: ${fmt(data.a[3])}\nA5: ${fmt(data.a[4])}\n\n`;
+  o+=`== PARTE B ==\nB1 Intervenir primero: ${data.b1.join(", ")||"(ninguno)"}\nB2 Prioridad: ${KPIS.map((k,i)=>`${k}=${data.b2[i]||"-"}`).join(" | ")}\n\n`;
+  o+=`== PARTE C ==\nC0 Jornada legal: ${fmt(data.c0)} h\n`+P.map(p=>`${p[0]} ${p[1]}: ${F("cc_"+p[0])||"-"} / ${F("cf_"+p[0])||"-"} visitas / ${F("cr_"+p[0])||"-"}`).join("\n");
+  o+=`\nCarga: ${$("#routeTotal").textContent}\nC1 Criterios:\n${fmt(data.c1)}\n\n== PARTE D ==\n${fmt(data.d1)}\n\n== PARTE E ==\n`+data.e.map((x,i)=>`E${i+1}: ${x||"-"}`).join("\n");
+  o+=`\n\nCODIGO-EVAL:${enc(data)}:FIN`;
+  $("#out").textContent=o;
+  const b=$("#finBanner");b.hidden=!S.end;b.textContent=S.end?"Tiempo cumplido. Sus respuestas quedaron cerradas.":"";
+  return o;
+}
+$("#copyBtn").addEventListener("click",()=>{
+  const t=summary();
+  navigator.clipboard.writeText(t).then(()=>{$("#copyMsg").textContent="Copiado. Péguelo en el chat de Teams."}).catch(()=>{const r=document.createRange();r.selectNodeContents($("#out"));const s=getSelection();s.removeAllRanges();s.addRange(r);$("#copyMsg").textContent="Seleccioné el texto: cópielo con Ctrl+C."});
+});
+$("#resetBtn").addEventListener("click",()=>{
+  if($("#rcode").value.trim().toUpperCase()!=="EFI2026"){$("#resetMsg").textContent="Código incorrecto.";return}
+  try{localStorage.removeItem(KEY)}catch(e){}
+  location.reload();
+});
+})();
+</script>
+
+</body></html>

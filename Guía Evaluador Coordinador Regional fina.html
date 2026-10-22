@@ -1,0 +1,293 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Guía Evaluador Coordinador Regional</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: calificador primero (pegar → calificar → consolidar), luego protocolo, claves y preguntas */
+:root{
+  --bg:#f5f5f3; --surface:#fff; --ink:#1c1b1a; --muted:#66625e; --line:#e1ded9;
+  --accent:#c8102e; --accent-soft:#fbe9ec; --ok:#1f7a4d; --ok-soft:#e5f4ec; --warn:#a15c00; --warn-soft:#fdf1df; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --body:"Source Sans 3","Segoe UI",Roboto,Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#141313;--surface:#1e1c1c;--ink:#efecea;--muted:#a39e99;--line:#383433;--accent:#ff4d5e;--accent-soft:#3a1d21;--ok:#5fcf93;--ok-soft:#173326;--warn:#f0b357;--warn-soft:#3a2b14;--bad:#ff7a70;--bad-soft:#3d1c1a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141313;--surface:#1e1c1c;--ink:#efecea;--muted:#a39e99;--line:#383433;--accent:#ff4d5e;--accent-soft:#3a1d21;--ok:#5fcf93;--ok-soft:#173326;--warn:#f0b357;--warn-soft:#3a2b14;--bad:#ff7a70;--bad-soft:#3d1c1a;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 72px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:40px;text-transform:uppercase}
+h2{font-size:28px;text-transform:uppercase}
+h2 small{display:block;font:600 13px var(--body);letter-spacing:.08em;color:var(--accent);margin-bottom:4px}
+h3{font-size:20px}
+p,li{max-width:76ch}
+p{margin:0}
+ul,ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.muted{color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:14px;min-width:0}
+.warnbox{background:var(--bad-soft);color:var(--bad);padding:12px 16px;border-radius:8px;font-weight:600}
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font:600 12px var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--bg)}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+.tl div{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tl b{font-family:var(--mono);font-weight:500}
+.key{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.key div{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--bg)}
+.key .v{font:500 24px var(--mono)}
+.chip{display:inline-block;font:600 12px var(--body);padding:2px 8px;border-radius:999px;white-space:nowrap}
+.ok{background:var(--ok-soft);color:var(--ok)} .warn{background:var(--warn-soft);color:var(--warn)} .bad{background:var(--bad-soft);color:var(--bad)}
+select,input,textarea{font:15px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+textarea{width:100%;min-height:140px;font:13px/1.45 var(--mono)}
+select:focus,input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:700 15px var(--body);padding:10px 16px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.score{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.score .big{font:500 44px var(--mono)}
+.txt{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px}
+.det{font-size:13px;color:var(--muted)}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:560px){h1{font-size:32px}.tl div{grid-template-columns:80px 1fr}}
+</style>
+
+<main class="wrap">
+  <header style="display:grid;gap:10px">
+    <h1>Guía del evaluador</h1>
+    <p class="muted">Assessment Coordinador Regional · Eficacia / Henkel Colombiana. Uso interno del panel.</p>
+    <div class="warnbox">Este enlace contiene las respuestas. Compártalo solo con el panel evaluador.</div>
+  </header>
+
+  <!-- CALIFICADOR -->
+  <section class="panel">
+    <h2><small>Paso 1</small>Pegar la entrega del candidato</h2>
+    <p>Copie del chat de Teams todo el texto que entregó el candidato (debe incluir la línea <b>CODIGO-EVAL</b>) y péguelo aquí.</p>
+    <label for="paste" class="muted">Entrega del candidato</label>
+    <textarea id="paste" placeholder="ASSESSMENT COORDINADOR REGIONAL – EFICACIA / HENKEL&#10;…&#10;CODIGO-EVAL:…:FIN"></textarea>
+    <div class="row"><button class="btn" id="go" type="button">Calificar</button><span id="pmsg" class="muted"></span></div>
+  </section>
+
+  <section class="panel" id="res" hidden>
+    <h2><small>Paso 2</small>Resultado automático</h2>
+    <div class="row" style="justify-content:space-between"><div><h3 id="rname"></h3><span class="muted" id="rmeta"></span></div><div class="flags" id="rflags"></div></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>Competencia</th><th class="n">Peso</th><th>Detalle</th><th class="n">Automático</th><th>Ajuste del panel</th><th class="n">Final</th></tr></thead>
+      <tbody id="rtab"></tbody></table></div>
+    <div class="score"><div><span class="muted">Puntaje ponderado (1 a 4)</span><div class="big" id="rtot">–</div></div><span id="rdec" class="chip"></span></div>
+    <h3>Respuestas abiertas para leer</h3>
+    <div style="display:grid;gap:10px">
+      <div><b>A5 · Conclusión sobre metas</b><div class="txt" id="ra5"></div></div>
+      <div><b>C1 · Criterios de ruta</b><div class="txt" id="rc1"></div></div>
+      <div><b>D1 · Imprevisto</b> <span class="muted">(califica Adaptabilidad)</span><div class="txt" id="rd1"></div></div>
+    </div>
+    <label for="obs"><b>Observaciones del panel</b></label><textarea id="obs" style="min-height:70px;font:15px var(--body)"></textarea>
+    <div class="row"><button class="btn" id="saveBtn" type="button">Guardar en el consolidado</button><span id="smsg" class="muted"></span></div>
+  </section>
+
+  <section class="panel">
+    <h2><small>Paso 3</small>Consolidado de candidatos</h2>
+    <p class="muted">Se guarda en este navegador. Use "Copiar para Excel" y pegue en una hoja para archivarlo o compartirlo.</p>
+    <div class="tablebox"><table><thead id="chead"></thead><tbody id="cbody"></tbody></table></div>
+    <div class="row"><button class="btn ghost" id="copyAll" type="button">Copiar para Excel</button><button class="btn ghost" id="clearAll" type="button">Vaciar consolidado</button><span id="cmsg" class="muted"></span></div>
+  </section>
+
+  <section class="panel">
+    <h2><small>Cómo se calcula</small>Reglas de calificación</h2>
+    <div class="tablebox"><table>
+      <thead><tr><th>Competencia</th><th class="n">Peso</th><th>Fuente</th><th>Regla</th></tr></thead>
+      <tbody>
+        <tr><td>Análisis de datos y KPI</td><td class="n">25%</td><td>A1–A4</td><td>Un punto por respuesta correcta (A3 = 80 vale medio punto). Nota = 1 + 3 × aciertos / 4.</td></tr>
+        <tr><td>Priorización</td><td class="n">20%</td><td>B1, B2</td><td>B1: aciertos sobre T03, T06, T12, T15, T19, menos 0,2 por cada elegido sin sustento. B2: Volumen en primer lugar y Cobertura y Frecuencia por encima de los ratios.</td></tr>
+        <tr><td>Diseño de rutas</td><td class="n">25%</td><td>C0, rutero, C1</td><td>Promedio de 7 componentes (el de capacidad pesa doble): jornada 42 h, PDV cubiertos, rutas dentro de 36 h, clasificación ABC, frecuencia coherente con la clase, agrupación por zonas y criterios mencionados.</td></tr>
+        <tr><td>Gestión de personas</td><td class="n">15%</td><td>E1–E3</td><td>3 aciertos = 4; 2 = 3; 1 = 2; 0 = 1.</td></tr>
+        <tr><td>Adaptabilidad</td><td class="n">5%</td><td>D1</td><td>Manual: lo califica el panel leyendo D1.</td></tr>
+        <tr><td>Comunicación ejecutiva</td><td class="n">10%</td><td>Sustentación</td><td>Manual: presentación y respuestas a preguntas.</td></tr>
+      </tbody></table></div>
+    <p class="muted">Decisión: 3,0 o más, recomendado; de 2,5 a 2,99, recomendado con plan de desarrollo; menos de 2,5, no recomendado. El panel puede ajustar cualquier nota automática si la sustentación verbal lo justifica.</p>
+  </section>
+
+  <section class="panel">
+    <h2><small>Protocolo</small>Sesión de 80 minutos por Teams</h2>
+    <div class="tl">
+      <div><b>0–5</b><span>Bienvenida, verificación de identidad con cámara, reglas. El candidato comparte pantalla completa durante toda la prueba.</span></div>
+      <div><b>5</b><span>Se pega en el chat el enlace de la prueba. Hasta ese momento el candidato no ha visto los casos.</span></div>
+      <div><b>5–45</b><span>Resolución (40 min). La Parte D se habilita sola en el minuto 30 de la sesión.</span></div>
+      <div><b>45–60</b><span>Sustentación verbal: justificación de prioridades, plan de acción, orden de visitas y seguimiento de rutas.</span></div>
+      <div><b>60–75</b><span>Preguntas de profundización (abajo).</span></div>
+      <div><b>75–80</b><span>El candidato pega su entrega en el chat. El panel la califica aquí y ajusta las notas manuales.</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2><small>Claves</small>Partes A y B</h2>
+    <div class="key">
+      <div><span class="muted">A1 · Volumen en línea</span><div class="v">72%</div><span class="muted">90% × 20/25</span></div>
+      <div><span class="muted">A2 · Proyección cierre</span><div class="v">87,5%</div><span class="muted">70% / 0,8</span></div>
+      <div><span class="muted">A3 · Venta adicional</span><div class="v">$10 M/día</div><span class="muted">Requiere $80 M/día (400/5) vs $70 M/día actual (1.400/20)</span></div>
+      <div><span class="muted">A4 · Foco</span><div class="v">Volumen</div><span class="muted">Mayor peso y aún recuperable</span></div>
+    </div>
+    <p><b>A5 esperado:</b> la Efectividad cerraría como máximo en 52% ((40×20 + 100×5)/25) y la Ejecución Perfecta en 84%. Esas metas ya no se cumplen; Volumen, Cobertura y Frecuencia sí son recuperables.</p>
+    <p><b>B1:</b> T03, T06, T12, T15 y T19 acumulan 20 días de ausencia y los peores indicadores; sin ellos el Volumen promedio sube a 77%. Se aceptan sin penalizar T20 (visita pero no vende), y T09, T13 y T17 (Ejecución Perfecta baja).</p>
+    <p><b>B2:</b> 1 Volumen; 2 y 3 Cobertura y Frecuencia; 4 y 5 Efectividad y Ejecución Perfecta.</p>
+  </section>
+
+  <section class="panel">
+    <h2><small>Claves</small>Parte C · Rutero de referencia</h2>
+    <p>Visitar los 15 PDV 5 veces por semana exige 157 h y solo hay 108 h de rutero (3 × 36 h). El candidato debe clasificar, bajar frecuencia donde hay crecimiento y pocos agotados, y agrupar por zona.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Ruta</th><th>PDV y visitas por semana</th><th>Zonas</th><th class="n">Horas</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>P02 ×4, P07 ×3, P05 ×3, P06 ×3, P12 ×2, P10 ×1</td><td>Norte + Centro</td><td class="n">36,0</td></tr>
+        <tr><td>R2</td><td>P01 ×4, P03 ×4, P15 ×4</td><td>Occidente</td><td class="n">32,0</td></tr>
+        <tr><td>R3</td><td>P04 ×3, P09 ×3, P08 ×2, P14 ×2, P11 ×2, P13 ×2</td><td>Sur + Occidente</td><td class="n">31,0</td></tr>
+      </tbody></table></div>
+    <p class="muted">Clase A: P01, P02, P03, P04, P05, P07, P09, P15 (≈72% de la venta). Clase B: P06, P08, P12, P14. Clase C: P10, P11, P13. La calificación acepta A o B en P07, P08 y P09, y B o C en P12. Hay más soluciones válidas.</p>
+  </section>
+
+  <section class="panel">
+    <h2><small>Claves</small>Partes D y E</h2>
+    <p><b>D esperado:</b> cubre la exhibición del sábado con la mercaderista de la ruta más cercana o con la tropa de impulso; suspende visitas C de la semana para liberar horas; reasigna la zona de T03 a T01/T02 y abre la vacante ese día; informa al KAM qué se cubre, qué no y con qué riesgo. Señal de alerta: prometer todo sin decir qué se deja de hacer.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Ítem</th><th>Correcta</th><th>Por qué las otras fallan</th></tr></thead>
+      <tbody>
+        <tr><td>E1 · Visita fuera de geocerca</td><td>c</td><td>a) sanciona sin debido proceso; b) ignora la reincidencia; d) delega la decisión y retrasa la verificación.</td></tr>
+        <tr><td>E2 · Labores fuera de contrato</td><td>a</td><td>b) expone a la colaboradora y al contrato; c) le traslada el conflicto a ella; d) se salta al KAM.</td></tr>
+        <tr><td>E3 · Vendedor top con quejas</td><td>d</td><td>a) premia una conducta en duda; b) esconde el problema; c) deja crecer el riesgo hasta fin de mes.</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="panel">
+    <h2><small>Sustentación</small>Preguntas para la parte verbal</h2>
+    <ul>
+      <li>¿Por qué ese orden de prioridades? ¿Qué plan de acción ejecuta en los 5 días y qué cambia para el mes siguiente?</li>
+      <li>¿Con qué PDV arranca cada ruta en el día y por qué? (Esperado: ventanas de recibo y PDV A con más agotados.)</li>
+      <li>¿Con qué indicadores y en qué plazo sabrá si las rutas funcionan? (Esperado: piloto de 4 semanas, agotados, EP, venta por hora.)</li>
+      <li>Si el KAM le exige cumplir Efectividad este mes, ¿qué le responde con números?</li>
+      <li>Cambio en vivo: se elimina el sábado de impulso. ¿Qué PDV sube de frecuencia?</li>
+      <li>¿Cuánto cuesta poner a la tropa a trabajar domingos con el recargo vigente y cuándo vale la pena?</li>
+    </ul>
+    <p class="muted">Si el candidato no puede explicar sus propios números o ajustar la solución cuando cambian los datos, la respuesta escrita probablemente no es suya.</p>
+  </section>
+</main>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const P=[["P01","Occidente",150,182],["P02","Norte",150,160],["P03","Occidente",150,148],["P04","Occidente",120,135],["P05","Centro",90,120],["P06","Norte",90,64],["P07","Norte",120,92],["P08","Sur",120,88],["P09","Sur",120,98],["P10","Norte",60,38],["P11","Sur",75,46],["P12","Norte",60,55],["P13","Sur",75,42],["P14","Sur",90,72],["P15","Occidente",120,104]];
+const KEYC={P01:"A",P02:"A",P03:"A",P04:"A",P05:"A",P07:"AB",P09:"AB",P15:"A",P06:"B",P08:"AB",P12:"BC",P14:"B",P10:"C",P11:"C",P13:"C"};
+const KPIS=["Volumen","Efectividad","Ejecución Perfecta","Cobertura","Frecuencia"];
+const COMP=[["Análisis de datos y KPI",25],["Priorización",20],["Diseño de rutas",25],["Gestión de personas",15],["Adaptabilidad",5],["Comunicación ejecutiva",10]];
+const CAP=36;
+const num=x=>{const n=parseFloat(String(x||"").replace(",","."));return isNaN(n)?null:n};
+const near=(x,t,tol=0.6)=>x!=null&&Math.abs(x-t)<=tol;
+const to4=f=>Math.round((1+3*Math.max(0,Math.min(1,f)))*10)/10;
+let cur=null;
+
+function grade(d){
+  const out=[];
+  /* 1. Análisis */
+  const a1=num(d.a[0]),a2=num(d.a[1]),a3=num(d.a[2]);
+  let pA=0,dA=[];
+  if(near(a1,72)){pA++;dA.push("A1 ✓")}else dA.push(`A1 ✗ (${d.a[0]||"–"})`);
+  if(near(a2,87.5)){pA++;dA.push("A2 ✓")}else dA.push(`A2 ✗ (${d.a[1]||"–"})`);
+  if(near(a3,10)){pA++;dA.push("A3 ✓")}else if(near(a3,80)){pA+=0.5;dA.push("A3 ½ (dio la venta total, no la adicional)")}else dA.push(`A3 ✗ (${d.a[2]||"–"})`);
+  if(d.a[3]==="Volumen"){pA++;dA.push("A4 ✓")}else dA.push(`A4 ✗ (${d.a[3]||"–"})`);
+  out.push([to4(pA/4),dA.join(" · ")]);
+  /* 2. Priorización */
+  const key=["T03","T06","T12","T15","T19"],ok=["T20","T09","T13","T17"];
+  const hits=d.b1.filter(x=>key.includes(x)).length,wrong=d.b1.filter(x=>!key.includes(x)&&!ok.includes(x));
+  const b1=Math.max(0,hits/5-0.2*wrong.length);
+  const r=Object.fromEntries(KPIS.map((k,i)=>[k,num(d.b2[i])]));
+  let b2=0;const dB=[`B1: ${hits}/5 clave${wrong.length?`, ${wrong.length} sin sustento (${wrong.join(", ")})`:""}`];
+  if(r.Volumen===1){b2+=0.5;dB.push("Volumen 1.º ✓")}else dB.push("Volumen no es 1.º");
+  const worstAcc=Math.max(r.Cobertura??99,r.Frecuencia??99),bestRat=Math.min(r.Efectividad??0,r["Ejecución Perfecta"]??0);
+  if(r.Cobertura&&r.Frecuencia&&r.Efectividad&&r["Ejecución Perfecta"]&&worstAcc<bestRat){b2+=0.5;dB.push("acumulados antes que ratios ✓")}else dB.push("ratios antes que acumulados recuperables");
+  out.push([to4((b1+b2)/2),dB.join(" · ")]);
+  /* 3. Rutas */
+  const m=Object.fromEntries(d.c.map(x=>[x[0],{c:x[1],f:+x[2]||0,r:x[3]}]));
+  const comp=[],dC=[];
+  const jor=num(d.c0)===42;comp.push(jor?1:0);dC.push(jor?"Jornada 42 h ✓":`Jornada ✗ (${d.c0||"–"})`);
+  const cov=P.filter(p=>m[p[0]]&&m[p[0]].r&&m[p[0]].f>0).length/P.length;comp.push(cov);dC.push(`PDV cubiertos ${Math.round(cov*15)}/15`);
+  const R={};P.forEach(p=>{const x=m[p[0]];if(x&&x.r&&x.f>0)(R[x.r]=R[x.r]||[]).push([p,x.f])});
+  const rk=Object.keys(R);let inCap=0,zs=0,hs=[];
+  rk.forEach(k=>{const z=new Set(R[k].map(e=>e[0][1])).size,tr=z<=1?20:z==2?30:40;const h=R[k].reduce((a,[p,f])=>a+f*(p[2]+tr),0)/60;hs.push(`${k} ${h.toFixed(1)} h`);if(h<=CAP+0.05)inCap++;zs+=z});
+  const capS=rk.length?inCap/Math.max(3,rk.length):0;comp.push(capS,capS);dC.push(`Rutas dentro de 36 h: ${inCap}/${Math.max(3,rk.length)} (${hs.join(", ")||"sin rutas"})`);
+  const abc=P.filter(p=>m[p[0]]&&m[p[0]].c&&KEYC[p[0]].includes(m[p[0]].c)).length/P.length;comp.push(abc);dC.push(`ABC ${Math.round(abc*15)}/15`);
+  const coh=P.filter(p=>{const x=m[p[0]];if(!x||!x.c)return false;return x.c==="A"?x.f>=3:x.c==="C"?x.f>=1&&x.f<=2:x.f>=1&&x.f<=4}).length/P.length;comp.push(coh);dC.push(`frecuencia coherente ${Math.round(coh*15)}/15`);
+  const avgZ=rk.length?zs/rk.length:9;const zS=avgZ<=2?1:avgZ<=2.5?0.5:0;comp.push(zS);dC.push(`zonas por ruta ${rk.length?avgZ.toFixed(1):"–"}`);
+  const t=(d.c1||"").toLowerCase();
+  const G=[/abc|pareto|venta|potencial|clasific|participaci/,/zona|geogr|cercan|desplaz|cluster|distanc|ubicaci|traslad/,/horario|recibo|ventana|hora de|madrugad|apertura/,/jornada|legal|horas|carga|42|dominical|recargo|capacidad|norma/,/agotad|ejecuci|exhibici|decrec|crecim|indicador|kpi|quiebre/];
+  const g=G.filter(rx=>rx.test(t)).length;comp.push(g/5);dC.push(`criterios clave ${g}/5`);
+  out.push([to4(comp.reduce((a,b)=>a+b,0)/comp.length),dC.join(" · ")]);
+  /* 4. Personas */
+  const ek=["c","a","d"],ec=d.e.filter((x,i)=>x===ek[i]).length;
+  out.push([[1,2,3,4][ec],d.e.map((x,i)=>`E${i+1}: ${x||"–"} ${x===ek[i]?"✓":"✗"}`).join(" · ")]);
+  out.push([null,"Manual: lea D1"]);out.push([null,"Manual: sustentación"]);
+  return out;
+}
+
+function decode(txt){
+  const mt=txt.match(/CODIGO-EVAL:\s*([A-Za-z0-9+/=\s]+?)\s*:FIN/);
+  if(!mt)throw new Error("No encontré la línea CODIGO-EVAL. Verifique que copió la entrega completa.");
+  try{return JSON.parse(decodeURIComponent(escape(atob(mt[1].replace(/\s+/g,"")))))}catch(e){throw new Error("El código está incompleto o fue modificado. Pida al candidato copiar de nuevo su entrega.")}
+}
+
+function render(){
+  const d=cur.d,auto=cur.auto;
+  $("#rname").textContent=d.cand||"(sin nombre)";
+  const mins=d.start?Math.round((d.end-d.start)/60000):"–";
+  $("#rmeta").textContent=`${d.ced||""} · ${d.start?new Date(d.start).toLocaleString("es-CO"):""} · ${mins} min`;
+  const fl=[];fl.push(d.closed?'<span class="chip ok">Tiempo completo</span>':'<span class="chip warn">Entregó antes del tiempo</span>');
+  fl.push(`<span class="chip ${d.blur>3?"bad":d.blur>0?"warn":"ok"}">Salidas de pestaña: ${d.blur}</span>`);
+  fl.push(`<span class="chip ${d.paste>2?"bad":d.paste>0?"warn":"ok"}">Textos pegados: ${d.paste}</span>`);
+  $("#rflags").innerHTML=fl.join("");
+  $("#rtab").innerHTML=COMP.map((c,i)=>`<tr><td><b>${c[0]}</b></td><td class="n">${c[1]}%</td><td class="det">${auto[i][1]}</td><td class="n">${auto[i][0]==null?"–":auto[i][0].toFixed(1)}</td><td><select id="ov${i}" aria-label="Ajuste ${c[0]}"><option value="">${auto[i][0]==null?"Calificar…":"Usar automático"}</option>${[1,1.5,2,2.5,3,3.5,4].map(n=>`<option value="${n}" ${cur.ov[i]==n?"selected":""}>${n}</option>`).join("")}</select></td><td class="n" id="fin${i}">–</td></tr>`).join("");
+  COMP.forEach((_,i)=>$("#ov"+i).addEventListener("change",e=>{cur.ov[i]=e.target.value?+e.target.value:null;total()}));
+  $("#ra5").textContent=d.a[4]||"(sin respuesta)";$("#rc1").textContent=d.c1||"(sin respuesta)";$("#rd1").textContent=d.d1||"(sin respuesta)";
+  $("#obs").value=cur.obs||"";
+  $("#res").hidden=false;total();
+}
+function total(){
+  let s=0,w=0;cur.fin=COMP.map((c,i)=>{const v=cur.ov[i]??cur.auto[i][0];$("#fin"+i).textContent=v==null?"Pendiente":v.toFixed(1);if(v!=null){s+=v*c[1];w+=c[1]}return v});
+  const el=$("#rtot"),dc=$("#rdec");
+  if(w<100){el.textContent=w?(s/w).toFixed(2)+"*":"–";dc.className="chip warn";dc.textContent="Falta calificar Adaptabilidad o Comunicación";cur.total=null;cur.dec="Pendiente";return}
+  const t=s/100;cur.total=t;el.textContent=t.toFixed(2);
+  if(t>=3){dc.className="chip ok";cur.dec="Recomendado"}else if(t>=2.5){dc.className="chip warn";cur.dec="Recomendado con plan de desarrollo"}else{dc.className="chip bad";cur.dec="No recomendado"}
+  dc.textContent=cur.dec;
+}
+$("#go").addEventListener("click",()=>{
+  try{const d=decode($("#paste").value);cur={d,auto:grade(d),ov:[null,null,null,null,null,null],obs:""};render();$("#pmsg").textContent="";$("#smsg").textContent="";$("#res").scrollIntoView({behavior:"smooth"})}
+  catch(e){$("#pmsg").textContent=e.message;$("#res").hidden=true}
+});
+$("#obs").addEventListener("input",e=>{if(cur)cur.obs=e.target.value});
+
+/* consolidado */
+const CK="assess-eval-consolidado";let L=[];try{L=JSON.parse(localStorage.getItem(CK)||"[]")}catch(e){}
+const svL=()=>{try{localStorage.setItem(CK,JSON.stringify(L))}catch(e){}};
+const HEAD=["Candidato","Documento",...COMP.map(c=>`${c[0]} (${c[1]}%)`),"Total","Decisión","Salidas pestaña","Pegados","Observaciones"];
+function drawL(){
+  $("#chead").innerHTML="<tr>"+["#","Candidato",...COMP.map(c=>c[0]),"Total","Decisión",""].map((h,i)=>`<th class="${i>1&&i<9?"n":""}">${h}</th>`).join("")+"</tr>";
+  const S=[...L].sort((a,b)=>(b.total??-1)-(a.total??-1));
+  $("#cbody").innerHTML=S.length?S.map((x,i)=>`<tr><td class="n">${i+1}</td><td><b>${esc(x.cand)}</b><br><span class="det">${esc(x.ced)}</span></td>${x.fin.map(v=>`<td class="n">${v==null?"–":v.toFixed(1)}</td>`).join("")}<td class="n"><b>${x.total==null?"–":x.total.toFixed(2)}</b></td><td><span class="chip ${x.dec==="Recomendado"?"ok":x.dec==="No recomendado"?"bad":"warn"}">${x.dec}</span></td><td><button class="btn ghost sm" data-del="${x.id}" type="button">Quitar</button></td></tr>`).join(""):`<tr><td colspan="11" class="muted">Aún no hay candidatos calificados. Pegue una entrega arriba y pulse Guardar en el consolidado.</td></tr>`;
+}
+const esc=s=>String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+$("#saveBtn").addEventListener("click",()=>{
+  if(!cur)return;
+  const rec={id:(cur.d.ced||cur.d.cand||"")+"|"+cur.d.start,cand:cur.d.cand,ced:cur.d.ced,fin:cur.fin,total:cur.total,dec:cur.dec,blur:cur.d.blur,paste:cur.d.paste,obs:cur.obs};
+  const i=L.findIndex(x=>x.id===rec.id);if(i>=0)L[i]=rec;else L.push(rec);svL();drawL();
+  $("#smsg").textContent=i>=0?"Actualizado en el consolidado.":"Guardado en el consolidado.";
+});
+$("#cbody").addEventListener("click",e=>{const b=e.target.closest("[data-del]");if(!b)return;L=L.filter(x=>x.id!==b.dataset.del);svL();drawL()});
+let armed=false;
+$("#clearAll").addEventListener("click",()=>{if(!armed){armed=true;$("#clearAll").textContent="Confirmar: vaciar todo";$("#cmsg").textContent="Pulse de nuevo para borrar el consolidado.";setTimeout(()=>{armed=false;$("#clearAll").textContent="Vaciar consolidado";$("#cmsg").textContent=""},5000);return}L=[];svL();drawL();armed=false;$("#clearAll").textContent="Vaciar consolidado";$("#cmsg").textContent="Consolidado vacío."});
+$("#copyAll").addEventListener("click",()=>{
+  const rows=[HEAD,...[...L].sort((a,b)=>(b.total??-1)-(a.total??-1)).map(x=>[x.cand,x.ced,...x.fin.map(v=>v==null?"":String(v).replace(".",",")),x.total==null?"":x.total.toFixed(2).replace(".",","),x.dec,x.blur,x.paste,(x.obs||"").replace(/\s+/g," ")])];
+  const tsv=rows.map(r=>r.join("\t")).join("\n");
+  navigator.clipboard.writeText(tsv).then(()=>{$("#cmsg").textContent="Copiado. Péguelo en Excel."}).catch(()=>{$("#cmsg").textContent="Su navegador no permitió copiar. Intente desde otro navegador."});
+});
+drawL();
+})();
+</script>
+
+</body></html>
